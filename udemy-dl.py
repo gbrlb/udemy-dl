@@ -100,11 +100,12 @@ class Udemy(WebVtt2Srt, ProgressBar):
                 logger.error(msg="User Interrupted..", new_line=True)
                 sys.exit(0)
 
-    def downalod_subtitles(self, subtitles, filepath, language="en", keep_vtt=False):
+    def download_subtitle(self, subtitles, filepath, language="all", keep_vtt=False):
         """This function will simply download the subtitles.."""
-        if language and subtitles:
-            subtitle = subtitles.pop()
-            subtitles = subtitle.get_subtitle(language)
+        if language != "all" and subtitles:
+            for sub in subtitles:
+                if sub.language == language:
+                    subtitles = [sub]
         if subtitles:
             for sub in subtitles:
                 title = f"{sub.title}.{sub.language}"
@@ -261,7 +262,7 @@ class Udemy(WebVtt2Srt, ProgressBar):
         self,
         path="",
         quality="",
-        language="en",
+        language="all",
         dl_assets=True,
         dl_lecture=True,
         dl_subtitles=True,
@@ -360,7 +361,7 @@ class Udemy(WebVtt2Srt, ProgressBar):
                     if dl_assets:
                         self.download_assets(lecture_assets, filepath)
                     if dl_subtitles:
-                        self.downalod_subtitles(
+                        self.download_subtitle(
                             lecture_subtitles,
                             filepath,
                             language=language,
@@ -451,7 +452,7 @@ def main():
         type=str,
         help="Download specific subtitle/caption (e.g:- en).",
         metavar="",
-        default="en",
+        default="all",
     )
     advance.add_argument(
         "--chapter-start",
