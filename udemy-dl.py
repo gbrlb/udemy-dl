@@ -107,14 +107,15 @@ class Udemy(WebVtt2Srt, ProgressBar):
                 if sub.language == language:
                     subtitles = [sub]
         if subtitles:
+            filepath_subs = to_filepath(filepath, 'subtitles')
             for sub in subtitles:
                 title = f"{sub.title}.{sub.language}"
-                filename = os.path.join(filepath, sub.filename)
+                filename = os.path.join(filepath_subs, sub.filename)
                 logger.info(msg="Downloading subtitle(s)", new_line=True, before=True)
                 logger.info(msg=f"Downloading ({title})", new_line=True)
                 try:
                     retval = sub.download(
-                        filepath=filepath, quiet=True, callback=self.show_progress,
+                        filepath=filepath_subs, quiet=True, callback=self.show_progress,
                     )
                     msg = retval.get("msg")
                     if msg == "already downloaded":
@@ -183,6 +184,7 @@ class Udemy(WebVtt2Srt, ProgressBar):
                 logger.info(msg=f"Lecture(s) ({lectures_count})", new_line=True)
                 for lecture in lectures:
                     lecture_id = lecture.id
+                    lecture_title = lecture.title
                     lecture_streams = lecture.streams
                     lecture_best = lecture.getbest()
                     lecture_assets = lecture.assets
@@ -205,6 +207,15 @@ class Udemy(WebVtt2Srt, ProgressBar):
                         cc=80,
                         cc_msg=10,
                         post_msg=f"{lecture_id}.",
+                        cc_pmsg=80,
+                    )
+                    logger.info(
+                        indent="     - ",
+                        msg="Lecture Title : ",
+                        new_line=True,
+                        cc=80,
+                        cc_msg=10,
+                        post_msg=f"{lecture_title}.",
                         cc_pmsg=80,
                     )
                     indent = "\t- "
@@ -527,7 +538,9 @@ def main():
         help="Download course but skip asset(s).",
     )
 
+    # args = parser.parse_args(['--sub-only', '-k', 'cookies.txt', '--keep-vtt', '-s', 'en', 'https://www.udemy.com/course/ros-essentials/', '-c', '1'])
     args = parser.parse_args()
+
     if args.cookies:
         f_in = open(args.cookies)
         with open(args.cookies) as f_in:
