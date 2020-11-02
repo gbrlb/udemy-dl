@@ -519,7 +519,7 @@ class UdemyLectureStream(Downloader):
 
     def _generate_filename(self):
         ok = re.compile(r'[^\\/:*?"<>|]')
-        filename = "".join(x if ok.match(x) else "_" for x in self.title)
+        filename = "".join([x if ok.match(x) and ord(x) < 128 else "_" for x in self.title])
         filename += "." + self.extension
         return filename
 
@@ -617,7 +617,7 @@ class UdemyLectureAssets(Downloader):
 
     def _generate_filename(self):
         ok = re.compile(r'[^\\/:*?"<>|]')
-        filename = "".join(x if ok.match(x) else "_" for x in self.title)
+        filename = "".join([x if ok.match(x) and ord(x) < 128 else "_" for x in self.title])
         filename += ".{}".format(self.extension)
         return filename
 
@@ -682,7 +682,7 @@ class UdemyLectureSubtitles(Downloader):
 
     def _generate_filename(self):
         ok = re.compile(r'[^\\/:*?"<>|]')
-        filename = "".join(x if ok.match(x) else "_" for x in self.title)
+        filename = "".join([x if ok.match(x) and ord(x) < 128 else "_" for x in self.title])
         filename += ".{}.{}".format(self.language, self.extension)
         return filename
 

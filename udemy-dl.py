@@ -538,7 +538,7 @@ def main():
         help="Download course but skip asset(s).",
     )
 
-    # args = parser.parse_args(['--sub-only', '-k', 'cookies.txt', '--keep-vtt', '-s', 'en', 'https://www.udemy.com/course/ros-essentials/', '-c', '1'])
+    # args = parser.parse_args(['--sub-only', '-k', 'cookies.txt', '--keep-vtt', '-s', 'en', 'https://www.udemy.com/course/ros-essentials/', '-c', '14'])
     args = parser.parse_args()
 
     if args.cookies:
